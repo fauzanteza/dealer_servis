@@ -173,22 +173,36 @@ class Dealer extends CI_Controller {
         $this->load->view('templates/footer');
     }
 
-    // Proses Simpan Transaksi
+    // Proses Simpan Transaksi (Update Validasi Stok)
     public function proses_beli()
     {
         $id_motor = $this->input->post('id_motor');
         $jumlah   = $this->input->post('jumlah');
 
+        // 1. Ambil data motor untuk cek stok di database (Validasi Server)
+        $motor = $this->Dealer_model->get_motor_by_id($id_motor);
+
+        // Jika jumlah beli lebih besar dari stok database -> BATALKAN
+        if ($jumlah > $motor['stok']) {
+            echo "<script>
+                alert('Transaksi Gagal! Stok tidak mencukupi.');
+                window.location.href='" . base_url('index.php/dealer/tambah_penjualan') . "';
+            </script>";
+            return; // Berhenti disini
+        }
+
+        // 2. Jika aman, lanjut simpan
         $data = array(
             'nama_pembeli' => $this->input->post('nama_pembeli'),
             'id_motor'     => $id_motor,
-            'tanggal'      => date('Y-m-d'), // Tanggal hari ini otomatis
+            'tanggal'      => date('Y-m-d'),
             'jumlah_beli'  => $jumlah,
             'total_harga'  => $this->input->post('total_bayar')
         );
 
         $this->Dealer_model->simpan_penjualan($data, $id_motor, $jumlah);
         redirect('dealer/penjualan');
+		
     }
 	// -------------------------------------------------------------------------
     // 9. FITUR EDIT DATA MOTOR
@@ -225,13 +239,28 @@ class Dealer extends CI_Controller {
 	// -------------------------------------------------------------------------
     // 10. FITUR HAPUS MOTOR
     // -------------------------------------------------------------------------
-    
-    public function hapus_motor($id)
+// Hapus Transaksi & Kembalikan Stok
+    public function hapus_penjualan($id)
     {
-        // Panggil model untuk menghapus
-        $this->Dealer_model->hapus_motor($id);
-        
-        // Kembali ke halaman stok motor
-        redirect('dealer/motor');
+        // 1. Ambil data transaksi dulu sebelum dihapus
+        $transaksi = $this->Dealer_model->get_penjualan_by_id($id);
+
+        if ($transaksi) {
+            // 2. Kembalikan stok motor (Restock)
+            $this->Dealer_model->kembalikan_stok($transaksi['id_motor'], $transaksi['jumlah_beli']);
+
+            // 3. Baru hapus data transaksinya
+            $this->Dealer_model->hapus_penjualan($id);
+        }
+
+        redirect('dealer/penjualan');
+    }
+
+	// Aksi untuk Mengunci Transaksi (Simpan Permanen)
+    public function kunci_transaksi($id)
+    {
+        $this->Dealer_model->kunci_transaksi($id);
+        // Redirect kembali ke halaman penjualan
+        redirect('dealer/penjualan');
     }
 }

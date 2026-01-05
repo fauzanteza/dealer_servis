@@ -21,9 +21,10 @@
                             <th>Unit Motor</th>
                             <th>Jumlah</th>
                             <th>Total Harga</th>
+							<th>Aksi</th> </tr>
                         </tr>
                     </thead>
-                    <tbody>
+                   <tbody>
                         <?php 
                         $no = 1; 
                         foreach($transaksi as $row): 
@@ -39,12 +40,36 @@
                             <td class="text-right">
                                 Rp <?= number_format($row['total_harga'], 0, ',', '.') ?>
                             </td>
+                            
+                            <td class="text-center">
+                                <?php if($row['status'] == 'Pending'): ?>
+                                    
+                                    <a href="<?= base_url('index.php/dealer/kunci_transaksi/'.$row['id_penjualan']) ?>" 
+                                       class="btn btn-sm btn-primary"
+                                       onclick="return confirm('Simpan permanen? Data tidak akan bisa dibatalkan lagi.')">
+                                       ✅ Simpan
+                                    </a>
+
+                                    <a href="<?= base_url('index.php/dealer/hapus_penjualan/'.$row['id_penjualan']) ?>" 
+                                       class="btn btn-sm btn-danger"
+                                       onclick="return confirm('Batalkan transaksi? Stok akan dikembalikan.')">
+                                       🗑️ Batal
+                                    </a>
+
+                                <?php else: ?>
+                                    
+                                    <span class="badge bg-secondary">🔒 Permanen</span>
+                                
+                                <?php endif; ?>
+                            </td>
                         </tr>
                         <?php endforeach; ?>
 
                         <?php if(empty($transaksi)): ?>
                             <tr>
-                                <td colspan="6" class="text-center">Belum ada transaksi penjualan.</td>
+                                <td colspan="7" class="text-center py-3 text-muted">
+                                    <i>Belum ada data transaksi.</i>
+                                </td>
                             </tr>
                         <?php endif; ?>
                     </tbody>

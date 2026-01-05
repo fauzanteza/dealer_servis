@@ -77,4 +77,35 @@ class Dealer_model extends CI_Model {
         $this->db->where('id_motor', $id);
         $this->db->delete('tb_motor');
     }
+	// --- FITUR HAPUS PENJUALAN ---
+
+    // A. Ambil 1 data penjualan (untuk tahu id_motor & jumlahnya)
+    public function get_penjualan_by_id($id)
+    {
+        return $this->db->get_where('tb_penjualan', ['id_penjualan' => $id])->row_array();
+    }
+
+    // B. Kembalikan Stok (Saat transaksi dihapus/dibatalkan)
+    public function kembalikan_stok($id_motor, $jumlah)
+    {
+        // Stok ditambah (+) karena barang batal terjual
+        $this->db->set('stok', 'stok + ' . $jumlah, FALSE);
+        $this->db->where('id_motor', $id_motor);
+        $this->db->update('tb_motor');
+    }
+
+    // C. Hapus Data Penjualan
+    public function hapus_penjualan($id)
+    {
+        $this->db->where('id_penjualan', $id);
+        $this->db->delete('tb_penjualan');
+    }
+
+	// D. Kunci Transaksi (Agar tidak bisa dihapus lagi)
+    public function kunci_transaksi($id)
+    {
+        $this->db->set('status', 'Selesai');
+        $this->db->where('id_penjualan', $id);
+        $this->db->update('tb_penjualan');
+    }
 }
