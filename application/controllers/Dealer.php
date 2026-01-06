@@ -21,6 +21,7 @@ class Dealer extends CI_Controller
         $this->load->model('Dealer_model');
         // Mengaktifkan helper URL (opsional jika belum di autoload)
         $this->load->helper('url');
+        $this->load->helper('form');
     }
 
     // -------------------------------------------------------------------------
