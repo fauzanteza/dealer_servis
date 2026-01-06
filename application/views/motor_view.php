@@ -11,6 +11,7 @@
                 <thead class="table-dark">
                     <tr>
                         <th>No</th>
+                        <th>Foto</th>
                         <th>Merk</th>
                         <th>Tipe Motor</th>
                         <th>Warna</th>
@@ -20,33 +21,42 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php 
-                    $no = 1; 
+                    <?php
+                    $no = 1;
                     // PERHATIKAN: Disini kita pakai $stok_motor, bukan $antrian
-                    foreach($stok_motor as $mtr): 
-                    ?>
-                    <tr>
-                        <td><?= $no++ ?></td>
-                        <td><?= $mtr['merk'] ?></td>
-                        <td><?= $mtr['tipe'] ?></td>
-                        <td><?= $mtr['warna'] ?></td>
-                        <td>Rp <?= number_format($mtr['harga'], 0, ',', '.') ?></td>
-                        <td>
-                            <?php if($mtr['stok'] > 0): ?>
-                                <span class="badge bg-primary"><?= $mtr['stok'] ?> Unit</span>
-                            <?php else: ?>
-                                <span class="badge bg-danger">Habis</span>
-                            <?php endif; ?>
-                        </td>
-                        <td>
-                            <a href="<?= base_url('index.php/dealer/edit_motor/'.$mtr['id_motor']) ?>" class="btn btn-sm btn-warning">Edit</a>
-                            <a href="<?= base_url('index.php/dealer/hapus_motor/'.$mtr['id_motor']) ?>" 
-                              class="btn btn-sm btn-danger" 
-                              onclick="return confirm('Yakin ingin menghapus data motor ini?')">
-   Hapus
-                            </a>
-                        </td>
-                    </tr>
+                    foreach ($stok_motor as $mtr):
+                        ?>
+                        <tr>
+                            <td><?= $no++ ?></td>
+                            <td>
+                                <?php if (isset($mtr['foto']) && $mtr['foto']): ?>
+                                    <img src="<?= base_url('uploads/motor/' . $mtr['foto']) ?>" width="80" class="img-thumbnail"
+                                        alt="Foto Motor">
+                                <?php else: ?>
+                                    <span class="badge bg-secondary">No Image</span>
+                                <?php endif; ?>
+                            </td>
+                            <td><?= $mtr['merk'] ?></td>
+                            <td><?= $mtr['tipe'] ?></td>
+                            <td><?= $mtr['warna'] ?></td>
+                            <td>Rp <?= number_format($mtr['harga'], 0, ',', '.') ?></td>
+                            <td>
+                                <?php if ($mtr['stok'] > 0): ?>
+                                    <span class="badge bg-primary"><?= $mtr['stok'] ?> Unit</span>
+                                <?php else: ?>
+                                    <span class="badge bg-danger">Habis</span>
+                                <?php endif; ?>
+                            </td>
+                            <td>
+                                <a href="<?= base_url('index.php/dealer/edit_motor/' . $mtr['id_motor']) ?>"
+                                    class="btn btn-sm btn-warning">Edit</a>
+                                <a href="<?= base_url('index.php/dealer/hapus_motor/' . $mtr['id_motor']) ?>"
+                                    class="btn btn-sm btn-danger"
+                                    onclick="return confirm('Yakin ingin menghapus data motor ini?')">
+                                    Hapus
+                                </a>
+                            </td>
+                        </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
