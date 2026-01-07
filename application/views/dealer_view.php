@@ -1,5 +1,5 @@
 <div class="container-fluid">
-    
+
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="h3 mb-0 text-gray-800">🔧 Dashboard Antrian Servis</h2>
         <a href="<?= base_url('index.php/dealer/tambah') ?>" class="btn btn-primary shadow-sm">
@@ -25,17 +25,17 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php 
-                        $no = 1; 
+                        <?php
+                        $no = 1;
                         // Kita meloop variable $antrian yang dikirim dari Controller
-                        foreach($antrian as $row): 
+                        foreach($antrian as $row):
                         ?>
                         <tr>
                             <td><?= $no++ ?></td>
                             <td class="fw-bold"><?= $row['nama_pelanggan'] ?></td>
                             <td><?= $row['jenis_motor'] ?></td>
                             <td><?= $row['keluhan'] ?></td>
-                            
+
                             <td>
                                 <?php if($row['status'] == 'Menunggu'): ?>
                                     <span class="badge bg-danger p-2">⏳ Menunggu</span>
@@ -52,7 +52,7 @@
                                        class="btn btn-sm btn-info text-white">
                                        🔧 Kerjakan
                                     </a>
-                                
+
                                 <?php elseif($row['status'] == 'Diproses'): ?>
                                     <a href="<?= base_url('index.php/dealer/selesai_servis/'.$row['id']) ?>" 
                                        class="btn btn-sm btn-success">

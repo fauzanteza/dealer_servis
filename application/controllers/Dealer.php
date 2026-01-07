@@ -3,8 +3,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
  * Ini adalah "Kamus" untuk VS Code supaya tidak error merah
- * @property CI_Loader $load
+ * * @property CI_Loader $load
  * @property CI_Input $input
+ * @property CI_DB_query_builder $db      <-- Tambahan penting (Database)
+ * @property CI_Upload $upload            <-- Tambahan penting (Upload Gambar)
  * @property Dealer_model $Dealer_model
  */
 class Dealer extends CI_Controller
